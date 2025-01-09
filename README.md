@@ -75,7 +75,7 @@ We onderscheiden:
 
 De grafische gebruikerinterface staat hieronder afgebeeld.
 
-<img title="" src="afbeeldingen/2025-01-07-22-46-29-image.png" alt="" width="500">
+<img src="afbeeldingen/2025-01-07-22-46-29-image.jpg" width="500">
 
 De eigenlijke inhoud van de applicatie - onder logo en titel - bestaat uit twee kolommen  : 'kolomLInks' en 'kolomRechts' van elkaar gescheiden door een 'VerticalSeparator' (een element van FreeSimpleGUI).
 
