@@ -1,4 +1,5 @@
 from app.app import App
 
-mijnApp = App()
-mijnApp.toon()
+if __name__ == "__main__":
+    mijnApp = App()
+    mijnApp.run()

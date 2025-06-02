@@ -1,33 +1,28 @@
 import FreeSimpleGUI as sg
-
-from .app_layout import appLayout
-from entiteit.kopofmunt import KopOfMunt
-from bin.imagetkhelper import ImageTKHelper
+from entiteit.converter import CurrencyConverter
+from app.app_layout import AppLayout
 
 class App:
     def __init__(self):
-        self._kopOfMunt = KopOfMunt()
+        self.converter = CurrencyConverter()
+        self.currency_options = self.converter.get_currency_options()
+        self.layout = AppLayout().create_layout(self.currency_options)
+        self.window = sg.Window('Frankfurter', self.layout, finalize = True)
 
-    def toon(self):
-        venster = sg.Window(
-            title = 'KOP-OF-MUNT',
-            icon = 'assets/coin.png',
-            layout = appLayout(),
-            resizable = False,
-            disable_close = True
-        )
-
+    def run(self):
         while True:
-            evt, vals = venster.read()
+            event, values = self.window.read(timeout = 100)
 
-            match evt:
-                case sg.WIN_CLOSED | '-BTN-AFSLUITEN-':
-                    break
+            if event == sg.WIN_CLOSED or event == '-BTN-AFSLUITEN-':
+                break
 
-                case '-BTN-WERP-':
-                    worp = self._kopOfMunt.werp()
-                    venster['-IMG-KOPOFMUNT-'].update(data = ImageTKHelper.schaal(f'assets/{worp}.png', grootte = (200, 200)))
-                    geschiedenis = self._kopOfMunt.geschiedenis()
-                    venster['-LBX-MUNT-'].update(values = geschiedenis)
+            from_currency = values['-MUNT-VAN-']
+            to_currency = values['-MUNT-NAAR-']
+            amount = values['-BEDRAG-VAN-']
 
-        venster.close()
+            if from_currency and to_currency and amount.replace('.', '', 1).isdigit():
+                converted, rate = self.converter.convert(from_currency, to_currency, float(amount))
+                self.window['-BEDRAG-NAAR-'].update(value = f'{converted:.2f}')
+                self.window['-WISSELKOERS-'].update(value = f'Wisselkoers: {rate}')
+
+        self.window.close()
